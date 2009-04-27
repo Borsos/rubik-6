@@ -34,6 +34,7 @@ class CubeWidget : public QGLWidget
 		void paintGL();
 
 		void timerEvent(QTimerEvent* event);
+		void mousePressEvent(QMouseEvent* event);
 
 
 };

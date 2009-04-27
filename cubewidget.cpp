@@ -295,10 +295,20 @@ void CubeWidget::timerEvent(QTimerEvent* event)
 			rotationAngle = 0.0f;
 
 			rotation.type = (CubeModel::Turn) (rand() % 9);
+			//rotation.type = CubeModel::Z_AXIS;
 			rotation.cw = (bool) (rand() % 2);
 		}
 	}
 	
 	updateGL();
+}
+
+
+void CubeWidget::mousePressEvent(QMouseEvent* event)
+{
+	if (event->button() == Qt::LeftButton)
+	{
+		std::cout << "left click @ " << event->x() << ", " << event->y() << std::endl;
+	}
 }
 

@@ -113,32 +113,40 @@ void CubeModel::turn(Turn type, bool cw)
 			cube[0][2][2].id = cube[0][0][2].id;
 			cube[0][2][2].face[UP] = cube[0][0][2].face[LEFT];
 			cube[0][2][2].face[LEFT] = cube[0][0][2].face[DOWN];
+			cube[0][2][2].face[FRONT] = cube[0][0][2].face[FRONT];
 
 			cube[0][0][2].id = cube[2][0][2].id;
 			cube[0][0][2].face[LEFT] = cube[2][0][2].face[DOWN];
 			cube[0][0][2].face[DOWN] = cube[2][0][2].face[RIGHT];
+			cube[0][0][2].face[FRONT] = cube[2][0][2].face[FRONT];
 
 			cube[2][0][2].id = cube[2][2][2].id;
 			cube[2][0][2].face[DOWN] = cube[2][2][2].face[RIGHT];
 			cube[2][0][2].face[RIGHT] = cube[2][2][2].face[UP];
+			cube[2][0][2].face[FRONT] = cube[2][2][2].face[FRONT];
 
 			cube[2][2][2].id = temp.id;
 			cube[2][2][2].face[RIGHT] = temp.face[UP];
 			cube[2][2][2].face[UP] = temp.face[LEFT];
+			cube[2][2][2].face[FRONT] = temp.face[FRONT];
 
 			temp = cube[1][2][2];
 
 			cube[1][2][2].id = cube[0][1][2].id;
 			cube[1][2][2].face[UP] = cube[0][1][2].face[LEFT];
+			cube[1][2][2].face[FRONT] = cube[0][1][2].face[FRONT];
 
 			cube[0][1][2].id = cube[1][0][2].id;
 			cube[0][1][2].face[LEFT] = cube[1][0][2].face[DOWN];
+			cube[0][1][2].face[FRONT] = cube[1][0][2].face[FRONT];
 
 			cube[1][0][2].id = cube[2][1][2].id;
 			cube[1][0][2].face[DOWN] = cube[2][1][2].face[RIGHT];
+			cube[1][0][2].face[FRONT] = cube[2][1][2].face[FRONT];
 
 			cube[2][1][2].id = temp.id;
 			cube[2][1][2].face[RIGHT] = temp.face[UP];
+			cube[2][1][2].face[FRONT] = temp.face[FRONT];
 		}
 		else
 		{
@@ -148,32 +156,40 @@ void CubeModel::turn(Turn type, bool cw)
 			cube[0][2][2].id = cube[2][2][2].id;
 			cube[0][2][2].face[LEFT] = cube[2][2][2].face[UP];
 			cube[0][2][2].face[UP] = cube[2][2][2].face[RIGHT];
+			cube[0][2][2].face[FRONT] = cube[2][2][2].face[FRONT];
 
 			cube[2][2][2].id = cube[2][0][2].id;
 			cube[2][2][2].face[UP] = cube[2][0][2].face[RIGHT];
 			cube[2][2][2].face[RIGHT] = cube[2][0][2].face[DOWN];
+			cube[2][2][2].face[FRONT] = cube[2][0][2].face[FRONT];
 
 			cube[2][0][2].id = cube[0][0][2].id;
 			cube[2][0][2].face[RIGHT] = cube[0][0][2].face[DOWN];
 			cube[2][0][2].face[DOWN] = cube[0][0][2].face[LEFT];
+			cube[2][0][2].face[FRONT] = cube[0][0][2].face[FRONT];
 
 			cube[0][0][2].id = temp.id;
 			cube[0][0][2].face[DOWN] = temp.face[LEFT];
 			cube[0][0][2].face[LEFT] = temp.face[UP];
+			cube[0][0][2].face[FRONT] = temp.face[FRONT];
 
 			temp = cube[1][2][2];
 
 			cube[1][2][2].id = cube[2][1][2].id;
 			cube[1][2][2].face[UP] = cube[2][1][2].face[RIGHT];
+			cube[1][2][2].face[FRONT] = cube[2][1][2].face[FRONT];
 
 			cube[2][1][2].id = cube[1][0][2].id;
 			cube[2][1][2].face[RIGHT] = cube[1][0][2].face[DOWN];
+			cube[2][1][2].face[FRONT] = cube[1][0][2].face[FRONT];
 
 			cube[1][0][2].id = cube[0][1][2].id;
 			cube[1][0][2].face[DOWN] = cube[0][1][2].face[LEFT];
+			cube[1][0][2].face[FRONT] = cube[0][1][2].face[FRONT];
 
 			cube[0][1][2].id = temp.id;
 			cube[0][1][2].face[LEFT] = temp.face[UP];
+			cube[0][1][2].face[FRONT] = temp.face[FRONT];
 		}
 		break;
 	case BACK:
@@ -186,32 +202,40 @@ void CubeModel::turn(Turn type, bool cw)
 			cube[0][2][0].id = cube[2][2][0].id;
 			cube[0][2][0].face[LEFT] = cube[2][2][0].face[UP];
 			cube[0][2][0].face[UP] = cube[2][2][0].face[RIGHT];
+			cube[0][2][0].face[BACK] = cube[2][2][0].face[BACK];
 
 			cube[2][2][0].id = cube[2][0][0].id;
 			cube[2][2][0].face[UP] = cube[2][0][0].face[RIGHT];
 			cube[2][2][0].face[RIGHT] = cube[2][0][0].face[DOWN];
+			cube[2][2][0].face[BACK] = cube[2][0][0].face[BACK];
 
 			cube[2][0][0].id = cube[0][0][0].id;
 			cube[2][0][0].face[RIGHT] = cube[0][0][0].face[DOWN];
 			cube[2][0][0].face[DOWN] = cube[0][0][0].face[LEFT];
+			cube[2][0][0].face[BACK] = cube[0][0][0].face[BACK];
 
 			cube[0][0][0].id = temp.id;
 			cube[0][0][0].face[DOWN] = temp.face[LEFT];
 			cube[0][0][0].face[LEFT] = temp.face[UP];
+			cube[2][0][2].face[BACK] = temp.face[BACK];
 
 			temp = cube[1][2][0];
 
 			cube[1][2][0].id = cube[2][1][0].id;
 			cube[1][2][0].face[UP] = cube[2][1][0].face[RIGHT];
+			cube[1][2][0].face[BACK] = cube[2][1][0].face[BACK];
 
 			cube[2][1][0].id = cube[1][0][0].id;
 			cube[2][1][0].face[RIGHT] = cube[1][0][0].face[DOWN];
+			cube[2][1][0].face[BACK] = cube[1][0][0].face[BACK];
 
 			cube[1][0][0].id = cube[0][1][0].id;
 			cube[1][0][0].face[DOWN] = cube[0][1][0].face[LEFT];
+			cube[1][0][0].face[BACK] = cube[0][1][0].face[BACK];
 
 			cube[0][1][0].id = temp.id;
 			cube[0][1][0].face[LEFT] = temp.face[UP];
+			cube[0][1][0].face[BACK] = temp.face[BACK];
 		}
 		else
 		{
@@ -221,32 +245,40 @@ void CubeModel::turn(Turn type, bool cw)
 			cube[0][2][0].id = cube[0][0][0].id;
 			cube[0][2][0].face[UP] = cube[0][0][0].face[LEFT];
 			cube[0][2][0].face[LEFT] = cube[0][0][0].face[DOWN];
+			cube[0][2][0].face[BACK] = cube[0][0][0].face[BACK];
 
 			cube[0][0][0].id = cube[2][0][0].id;
 			cube[0][0][0].face[LEFT] = cube[2][0][0].face[DOWN];
 			cube[0][0][0].face[DOWN] = cube[2][0][0].face[RIGHT];
+			cube[0][0][0].face[BACK] = cube[2][0][0].face[BACK];
 
 			cube[2][0][0].id = cube[2][2][0].id;
 			cube[2][0][0].face[DOWN] = cube[2][2][0].face[RIGHT];
 			cube[2][0][0].face[RIGHT] = cube[2][2][0].face[UP];
+			cube[2][0][0].face[BACK] = cube[2][2][0].face[BACK];
 
 			cube[2][2][0].id = temp.id;
 			cube[2][2][0].face[RIGHT] = temp.face[UP];
 			cube[2][2][0].face[UP] = temp.face[LEFT];
+			cube[1][0][0].face[BACK] = cube[0][1][0].face[BACK];
 
 			temp = cube[1][2][0];
 
 			cube[1][2][0].id = cube[0][1][0].id;
 			cube[1][2][0].face[UP] = cube[0][1][0].face[LEFT];
+			cube[1][2][0].face[BACK] = cube[0][1][0].face[BACK];
 
 			cube[0][1][0].id = cube[1][0][0].id;
 			cube[0][1][0].face[LEFT] = cube[1][0][0].face[DOWN];
+			cube[0][1][0].face[BACK] = cube[1][0][0].face[BACK];
 
 			cube[1][0][0].id = cube[2][1][0].id;
 			cube[1][0][0].face[DOWN] = cube[2][1][0].face[RIGHT];
+			cube[1][0][0].face[BACK] = cube[2][1][0].face[BACK];
 
 			cube[2][1][0].id = temp.id;
 			cube[2][1][0].face[RIGHT] = temp.face[UP];
+			cube[2][1][0].face[BACK] = temp.face[BACK];
 		}
 		break;
 	case UP:
@@ -259,32 +291,40 @@ void CubeModel::turn(Turn type, bool cw)
 			cube[0][2][0].id = cube[0][2][2].id;
 			cube[0][2][0].face[BACK] = cube[0][2][2].face[LEFT];
 			cube[0][2][0].face[LEFT] = cube[0][2][2].face[FRONT];
+			cube[0][2][0].face[UP] = cube[0][2][2].face[UP];
 
 			cube[0][2][2].id = cube[2][2][2].id;
 			cube[0][2][2].face[LEFT] = cube[2][2][2].face[FRONT];
 			cube[0][2][2].face[FRONT] = cube[2][2][2].face[RIGHT];
+			cube[0][2][2].face[UP] = cube[2][2][2].face[UP];
 
 			cube[2][2][2].id = cube[2][2][0].id;
 			cube[2][2][2].face[FRONT] = cube[2][2][0].face[RIGHT];
 			cube[2][2][2].face[RIGHT] = cube[2][2][0].face[BACK];
+			cube[2][2][2].face[UP] = cube[2][2][0].face[UP];
 
 			cube[2][2][0].id = temp.id;
 			cube[2][2][0].face[RIGHT] = temp.face[BACK];
 			cube[2][2][0].face[BACK] = temp.face[LEFT];
+			cube[2][2][0].face[UP] = temp.face[UP];
 
 			temp = cube[1][2][0];
 
 			cube[1][2][0].id = cube[0][2][1].id;
 			cube[1][2][0].face[BACK] = cube[0][2][1].face[LEFT];
+			cube[1][2][0].face[UP] = cube[0][2][1].face[UP];
 
 			cube[0][2][1].id = cube[1][2][2].id;
 			cube[0][2][1].face[LEFT] = cube[1][2][2].face[FRONT];
+			cube[0][2][1].face[UP] = cube[1][2][2].face[UP];
 
 			cube[1][2][2].id = cube[2][2][1].id;
 			cube[1][2][2].face[FRONT] = cube[2][2][1].face[RIGHT];
+			cube[1][2][2].face[UP] = cube[2][2][1].face[UP];
 
 			cube[2][2][1].id = temp.id;
 			cube[2][2][1].face[RIGHT] = temp.face[BACK];
+			cube[2][2][1].face[UP] = temp.face[UP];
 		}
 		else
 		{
@@ -294,32 +334,40 @@ void CubeModel::turn(Turn type, bool cw)
 			cube[0][2][0].id = cube[2][2][0].id;
 			cube[0][2][0].face[LEFT] = cube[2][2][0].face[BACK];
 			cube[0][2][0].face[BACK] = cube[2][2][0].face[RIGHT];
+			cube[0][2][0].face[UP] = cube[2][2][0].face[UP];
 
 			cube[2][2][0].id = cube[2][2][2].id;
 			cube[2][2][0].face[BACK] = cube[2][2][2].face[RIGHT];
 			cube[2][2][0].face[RIGHT] = cube[2][2][2].face[FRONT];
+			cube[2][2][0].face[UP] = cube[2][2][2].face[UP];
 
 			cube[2][2][2].id = cube[0][2][2].id;
 			cube[2][2][2].face[RIGHT] = cube[0][2][2].face[FRONT];
 			cube[2][2][2].face[FRONT] = cube[0][2][2].face[LEFT];
+			cube[2][2][2].face[UP] = cube[0][2][2].face[UP];
 
 			cube[0][2][2].id = temp.id;
 			cube[0][2][2].face[FRONT] = temp.face[LEFT];
 			cube[0][2][2].face[LEFT] = temp.face[BACK];
+			cube[0][2][2].face[UP] = temp.face[UP];
 
 			temp = cube[1][2][0];
 
 			cube[1][2][0].id = cube[2][2][1].id;
 			cube[1][2][0].face[BACK] = cube[2][2][1].face[RIGHT];
+			cube[1][2][0].face[UP] = cube[2][2][1].face[UP];
 
 			cube[2][2][1].id = cube[1][2][2].id;
 			cube[2][2][1].face[RIGHT] = cube[1][2][2].face[FRONT];
+			cube[2][2][1].face[UP] = cube[1][2][2].face[UP];
 
 			cube[1][2][2].id = cube[0][2][1].id;
 			cube[1][2][2].face[FRONT] = cube[0][2][1].face[LEFT];
+			cube[1][2][2].face[UP] = cube[0][2][1].face[UP];
 
 			cube[0][2][1].id = temp.id;
 			cube[0][2][1].face[LEFT] = temp.face[BACK];
+			cube[0][2][1].face[UP] = temp.face[UP];
 		}
 		break;
 	case DOWN:
@@ -332,32 +380,40 @@ void CubeModel::turn(Turn type, bool cw)
 			cube[0][0][0].id = cube[2][0][0].id;
 			cube[0][0][0].face[LEFT] = cube[2][0][0].face[BACK];
 			cube[0][0][0].face[BACK] = cube[2][0][0].face[RIGHT];
+			cube[0][0][0].face[DOWN] = cube[2][0][0].face[DOWN];
 
 			cube[2][0][0].id = cube[2][0][2].id;
 			cube[2][0][0].face[BACK] = cube[2][0][2].face[RIGHT];
 			cube[2][0][0].face[RIGHT] = cube[2][0][2].face[FRONT];
+			cube[2][0][0].face[DOWN] = cube[2][0][2].face[DOWN];
 
 			cube[2][0][2].id = cube[0][0][2].id;
 			cube[2][0][2].face[RIGHT] = cube[0][0][2].face[FRONT];
 			cube[2][0][2].face[FRONT] = cube[0][0][2].face[LEFT];
+			cube[2][0][2].face[DOWN] = cube[0][0][2].face[DOWN];
 
 			cube[0][0][2].id = temp.id;
 			cube[0][0][2].face[FRONT] = temp.face[LEFT];
 			cube[0][0][2].face[LEFT] = temp.face[BACK];
+			cube[0][0][2].face[DOWN] = temp.face[DOWN];
 
 			temp = cube[1][0][0];
 
 			cube[1][0][0].id = cube[2][0][1].id;
 			cube[1][0][0].face[BACK] = cube[2][0][1].face[RIGHT];
+			cube[1][0][0].face[DOWN] = cube[2][0][1].face[DOWN];
 
 			cube[2][0][1].id = cube[1][0][2].id;
 			cube[2][0][1].face[RIGHT] = cube[1][0][2].face[FRONT];
+			cube[2][0][1].face[DOWN] = cube[1][0][2].face[DOWN];
 
 			cube[1][0][2].id = cube[0][0][1].id;
 			cube[1][0][2].face[FRONT] = cube[0][0][1].face[LEFT];
+			cube[1][0][2].face[DOWN] = cube[0][0][1].face[DOWN];
 
 			cube[0][0][1].id = temp.id;
 			cube[0][0][1].face[LEFT] = temp.face[BACK];
+			cube[0][0][1].face[DOWN] = temp.face[DOWN];
 		}
 		else
 		{
@@ -367,32 +423,40 @@ void CubeModel::turn(Turn type, bool cw)
 			cube[0][0][0].id = cube[0][0][2].id;
 			cube[0][0][0].face[BACK] = cube[0][0][2].face[LEFT];
 			cube[0][0][0].face[LEFT] = cube[0][0][2].face[FRONT];
+			cube[0][0][0].face[DOWN] = cube[0][0][2].face[DOWN];
 
 			cube[0][0][2].id = cube[2][0][2].id;
 			cube[0][0][2].face[LEFT] = cube[2][0][2].face[FRONT];
 			cube[0][0][2].face[FRONT] = cube[2][0][2].face[RIGHT];
+			cube[0][0][2].face[DOWN] = cube[2][0][2].face[DOWN];
 
 			cube[2][0][2].id = cube[2][0][0].id;
 			cube[2][0][2].face[FRONT] = cube[2][0][0].face[RIGHT];
 			cube[2][0][2].face[RIGHT] = cube[2][0][0].face[BACK];
+			cube[2][0][2].face[DOWN] = cube[2][0][0].face[DOWN];
 
 			cube[2][0][0].id = temp.id;
 			cube[2][0][0].face[RIGHT] = temp.face[BACK];
 			cube[2][0][0].face[BACK] = temp.face[LEFT];
+			cube[2][0][0].face[DOWN] = temp.face[DOWN];
 
 			temp = cube[1][0][0];
 
 			cube[1][0][0].id = cube[0][0][1].id;
 			cube[1][0][0].face[BACK] = cube[0][0][1].face[LEFT];
+			cube[1][0][0].face[DOWN] = cube[0][0][1].face[DOWN];
 
 			cube[0][0][1].id = cube[1][0][2].id;
 			cube[0][0][1].face[LEFT] = cube[1][0][2].face[FRONT];
+			cube[0][0][1].face[DOWN] = cube[1][0][2].face[DOWN];
 
 			cube[1][0][2].id = cube[2][0][1].id;
 			cube[1][0][2].face[FRONT] = cube[2][0][1].face[RIGHT];
+			cube[1][0][2].face[DOWN] = cube[2][0][1].face[DOWN];
 
 			cube[2][0][1].id = temp.id;
 			cube[2][0][1].face[RIGHT] = temp.face[BACK];
+			cube[2][0][1].face[DOWN] = temp.face[DOWN];
 		}
 		break;
 	case LEFT:
@@ -405,32 +469,40 @@ void CubeModel::turn(Turn type, bool cw)
 			cube[0][2][0].id = cube[0][0][0].id;
 			cube[0][2][0].face[UP] = cube[0][0][0].face[BACK];
 			cube[0][2][0].face[BACK] = cube[0][0][0].face[DOWN];
+			cube[0][2][0].face[LEFT] = cube[0][0][0].face[LEFT];
 
 			cube[0][0][0].id = cube[0][0][2].id;
 			cube[0][0][0].face[BACK] = cube[0][0][2].face[DOWN];
 			cube[0][0][0].face[DOWN] = cube[0][0][2].face[FRONT];
+			cube[0][0][0].face[LEFT] = cube[0][0][2].face[LEFT];
 
 			cube[0][0][2].id = cube[0][2][2].id;
 			cube[0][0][2].face[DOWN] = cube[0][2][2].face[FRONT];
 			cube[0][0][2].face[FRONT] = cube[0][2][2].face[UP];
+			cube[0][0][2].face[LEFT] = cube[0][2][2].face[LEFT];
 
 			cube[0][2][2].id = temp.id;
 			cube[0][2][2].face[FRONT] = temp.face[UP];
 			cube[0][2][2].face[UP] = temp.face[BACK];
+			cube[0][2][2].face[LEFT] = temp.face[LEFT];
 
 			temp = cube[0][2][1];
 
 			cube[0][2][1].id = cube[0][1][0].id;
 			cube[0][2][1].face[UP] = cube[0][1][0].face[BACK];
+			cube[0][2][1].face[LEFT] = cube[0][1][0].face[LEFT];
 
 			cube[0][1][0].id = cube[0][0][1].id;
 			cube[0][1][0].face[BACK] = cube[0][0][1].face[DOWN];
+			cube[0][1][0].face[LEFT] = cube[0][0][1].face[LEFT];
 
 			cube[0][0][1].id = cube[0][1][2].id;
 			cube[0][0][1].face[DOWN] = cube[0][1][2].face[FRONT];
+			cube[0][0][1].face[LEFT] = cube[0][1][2].face[LEFT];
 
 			cube[0][1][2].id = temp.id;
 			cube[0][1][2].face[FRONT] = temp.face[UP];
+			cube[0][1][2].face[LEFT] = temp.face[LEFT];
 		}
 		else
 		{
@@ -440,32 +512,40 @@ void CubeModel::turn(Turn type, bool cw)
 			cube[0][2][0].id = cube[0][2][2].id;
 			cube[0][2][0].face[BACK] = cube[0][2][2].face[UP];
 			cube[0][2][0].face[UP] = cube[0][2][2].face[FRONT];
+			cube[0][2][0].face[LEFT] = cube[0][2][2].face[LEFT];
 
 			cube[0][2][2].id = cube[0][0][2].id;
 			cube[0][2][2].face[UP] = cube[0][0][2].face[FRONT];
 			cube[0][2][2].face[FRONT] = cube[0][0][2].face[DOWN];
+			cube[0][2][2].face[LEFT] = cube[0][0][2].face[LEFT];
 
 			cube[0][0][2].id = cube[0][0][0].id;
 			cube[0][0][2].face[FRONT] = cube[0][0][0].face[DOWN];
 			cube[0][0][2].face[DOWN] = cube[0][0][0].face[BACK];
+			cube[0][0][2].face[LEFT] = cube[0][0][0].face[LEFT];
 
 			cube[0][0][0].id = temp.id;
 			cube[0][0][0].face[DOWN] = temp.face[BACK];
 			cube[0][0][0].face[BACK] = temp.face[UP];
+			cube[0][0][0].face[LEFT] = temp.face[LEFT];
 
 			temp = cube[0][2][1];
 
 			cube[0][2][1].id = cube[0][1][2].id;
 			cube[0][2][1].face[UP] = cube[0][1][2].face[FRONT];
+			cube[0][2][1].face[LEFT] = cube[0][1][2].face[LEFT];
 
 			cube[0][1][2].id = cube[0][0][1].id;
 			cube[0][1][2].face[FRONT] = cube[0][0][1].face[DOWN];
+			cube[0][1][2].face[LEFT] = cube[0][0][1].face[LEFT];
 
 			cube[0][0][1].id = cube[0][1][0].id;
 			cube[0][0][1].face[DOWN] = cube[0][1][0].face[BACK];
+			cube[0][0][1].face[LEFT] = cube[0][1][0].face[LEFT];
 
 			cube[0][1][0].id = temp.id;
 			cube[0][1][0].face[BACK] = temp.face[UP];
+			cube[0][1][0].face[LEFT] = temp.face[LEFT];
 		}
 		break;
 	case RIGHT:
@@ -478,32 +558,40 @@ void CubeModel::turn(Turn type, bool cw)
 			cube[2][2][0].id = cube[2][2][2].id;
 			cube[2][2][0].face[BACK] = cube[2][2][2].face[UP];
 			cube[2][2][0].face[UP] = cube[2][2][2].face[FRONT];
+			cube[2][2][0].face[RIGHT] = cube[2][2][2].face[RIGHT];
 
 			cube[2][2][2].id = cube[2][0][2].id;
 			cube[2][2][2].face[UP] = cube[2][0][2].face[FRONT];
 			cube[2][2][2].face[FRONT] = cube[2][0][2].face[DOWN];
+			cube[2][2][2].face[RIGHT] = cube[2][0][2].face[RIGHT];
 
 			cube[2][0][2].id = cube[2][0][0].id;
 			cube[2][0][2].face[FRONT] = cube[2][0][0].face[DOWN];
 			cube[2][0][2].face[DOWN] = cube[2][0][0].face[BACK];
+			cube[2][0][2].face[RIGHT] = cube[2][0][0].face[RIGHT];
 
 			cube[2][0][0].id = temp.id;
 			cube[2][0][0].face[DOWN] = temp.face[BACK];
 			cube[2][0][0].face[BACK] = temp.face[UP];
+			cube[2][0][0].face[RIGHT] = temp.face[RIGHT];
 
 			temp = cube[2][2][1];
 
 			cube[2][2][1].id = cube[2][1][2].id;
 			cube[2][2][1].face[UP] = cube[2][1][2].face[FRONT];
+			cube[2][2][1].face[RIGHT] = cube[2][1][2].face[RIGHT];
 
 			cube[2][1][2].id = cube[2][0][1].id;
 			cube[2][1][2].face[FRONT] = cube[2][0][1].face[DOWN];
+			cube[2][1][2].face[RIGHT] = cube[2][0][1].face[RIGHT];
 
 			cube[2][0][1].id = cube[2][1][0].id;
 			cube[2][0][1].face[DOWN] = cube[2][1][0].face[BACK];
+			cube[2][0][1].face[RIGHT] = cube[2][1][0].face[RIGHT];
 
 			cube[2][1][0].id = temp.id;
 			cube[2][1][0].face[BACK] = temp.face[UP];
+			cube[2][1][0].face[RIGHT] = temp.face[RIGHT];
 		}
 		else
 		{
@@ -513,32 +601,40 @@ void CubeModel::turn(Turn type, bool cw)
 			cube[2][2][0].id = cube[2][0][0].id;
 			cube[2][2][0].face[UP] = cube[2][0][0].face[BACK];
 			cube[2][2][0].face[BACK] = cube[2][0][0].face[DOWN];
+			cube[2][2][0].face[RIGHT] = cube[2][0][0].face[RIGHT];
 
 			cube[2][0][0].id = cube[2][0][2].id;
 			cube[2][0][0].face[BACK] = cube[2][0][2].face[DOWN];
 			cube[2][0][0].face[DOWN] = cube[2][0][2].face[FRONT];
+			cube[2][0][0].face[RIGHT] = cube[2][0][2].face[RIGHT];
 
 			cube[2][0][2].id = cube[2][2][2].id;
 			cube[2][0][2].face[DOWN] = cube[2][2][2].face[FRONT];
 			cube[2][0][2].face[FRONT] = cube[2][2][2].face[UP];
+			cube[2][0][2].face[RIGHT] = cube[2][2][2].face[RIGHT];
 
 			cube[2][2][2].id = temp.id;
 			cube[2][2][2].face[FRONT] = temp.face[UP];
 			cube[2][2][2].face[UP] = temp.face[BACK];
+			cube[2][2][2].face[RIGHT] = temp.face[RIGHT];
 
 			temp = cube[2][2][1];
 
 			cube[2][2][1].id = cube[2][1][0].id;
 			cube[2][2][1].face[UP] = cube[2][1][0].face[BACK];
+			cube[2][2][1].face[RIGHT] = cube[2][1][0].face[RIGHT];
 
 			cube[2][1][0].id = cube[2][0][1].id;
 			cube[2][1][0].face[BACK] = cube[2][0][1].face[DOWN];
+			cube[2][1][0].face[RIGHT] = cube[2][0][1].face[RIGHT];
 
 			cube[2][0][1].id = cube[2][1][2].id;
 			cube[2][0][1].face[DOWN] = cube[2][1][2].face[FRONT];
+			cube[2][0][1].face[RIGHT] = cube[2][1][2].face[RIGHT];
 
 			cube[2][1][2].id = temp.id;
 			cube[2][1][2].face[FRONT] = temp.face[UP];
+			cube[2][1][2].face[RIGHT] = temp.face[RIGHT];
 		}
 		break;
 	case X_AXIS:

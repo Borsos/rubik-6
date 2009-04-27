@@ -38,7 +38,7 @@ class CubeModel
 		{
 			/** Type of move. */
 			Turn type;
-			/** Turn clockwise it true and counter-clockwise if false */
+			/** Turn clockwise if true and counter-clockwise if false */
 			bool cw;
 		};
 
