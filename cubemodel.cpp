@@ -97,6 +97,217 @@ bool CubeModel::load(std::ifstream file)
 	return false;
 }
 
+void CubeModel::turn_piece(Turn type, Piece& source, Piece& destination, bool cw)
+{
+	switch (type)
+	{
+	case X_AXIS:
+		destination.id = source.id;
+		destination.face[LEFT] = source.face[LEFT];
+		destination.face[RIGHT] = source.face[RIGHT];
+
+		if (cw)
+		{
+			destination.face[FRONT] = source.face[DOWN];
+			destination.face[DOWN] = source.face[BACK];
+			destination.face[BACK] = source.face[UP];
+			destination.face[UP] = source.face[FRONT];
+		}
+		else
+		{
+			destination.face[FRONT] = source.face[UP];
+			destination.face[UP] = source.face[BACK];
+			destination.face[BACK] = source.face[DOWN];
+			destination.face[DOWN] = source.face[FRONT];
+		}
+		break;
+	case Y_AXIS:
+		destination.id = source.id;
+		destination.face[DOWN] = source.face[DOWN];
+		destination.face[UP] = source.face[UP];
+
+		if (cw)
+		{
+			destination.face[LEFT] = source.face[FRONT];
+			destination.face[FRONT] = source.face[RIGHT];
+			destination.face[RIGHT] = source.face[BACK];
+			destination.face[BACK] = source.face[LEFT];
+		}
+		else
+		{
+			destination.face[LEFT] = source.face[BACK];
+			destination.face[BACK] = source.face[RIGHT];
+			destination.face[RIGHT] = source.face[FRONT];
+			destination.face[FRONT] = source.face[LEFT];
+		}
+		break;
+	case Z_AXIS:
+		destination.id = source.id;
+		destination.face[BACK] = source.face[BACK];
+		destination.face[FRONT] = source.face[FRONT];
+
+		if (cw)
+		{
+			destination.face[LEFT] = source.face[DOWN];
+			destination.face[DOWN] = source.face[RIGHT];
+			destination.face[RIGHT] = source.face[UP];
+			destination.face[UP] = source.face[LEFT];
+		}
+		else
+		{
+			destination.face[LEFT] = source.face[UP];
+			destination.face[UP] = source.face[RIGHT];
+			destination.face[RIGHT] = source.face[DOWN];
+			destination.face[DOWN] = source.face[LEFT];
+		}
+		break;
+	default:
+		std::cerr << "ERROR: Illegal type specified for turn_piece.\n";
+	}
+}
+
+void CubeModel::turn_layer(Turn type, int layer, bool cw)
+{
+	Piece temp_corner;
+	Piece temp_edge;
+
+	int x_corner, y_corner, z_corner;
+	int x_edge, y_edge, z_edge;
+	int x_source, y_source, z_source;
+
+	switch (type)
+	{
+	case X_AXIS:
+		y_corner = 0;
+		z_corner = 0;
+		y_edge = 1;
+		z_edge = 0;
+		temp_corner = cube[layer][y_corner][z_corner];
+		temp_edge = cube[layer][y_edge][z_edge];
+
+		for (int i = 1; i < 4; i++)
+		{
+			if (cw)
+			{
+				y_source = 2 - z_corner;
+				z_source = y_corner;
+				turn_piece(X_AXIS, cube[layer][y_source][z_source], cube[layer][y_corner][z_corner], cw);
+				y_corner = y_source;
+				z_corner = z_source;
+
+				y_source = 2 - z_edge;
+				z_source = y_edge;
+				turn_piece(X_AXIS, cube[layer][y_source][z_source], cube[layer][y_edge][z_edge], cw);
+				y_edge = y_source;
+				z_edge = z_source;
+			}
+			else
+			{
+				y_source = z_corner;
+				z_source = 2 - y_corner;
+				turn_piece(X_AXIS, cube[layer][y_source][z_source], cube[layer][y_corner][z_corner], cw);
+				y_corner = y_source;
+				z_corner = z_source;
+
+				y_source = z_edge;
+				z_source = 2 - y_edge;
+				turn_piece(X_AXIS, cube[layer][y_source][z_source], cube[layer][y_edge][z_edge], cw);
+				y_edge = y_source;
+				z_edge = z_source;
+			}
+		}
+		turn_piece(X_AXIS, temp_corner, cube[layer][y_corner][z_corner], cw);
+		turn_piece(X_AXIS, temp_edge, cube[layer][y_edge][z_edge], cw);
+		break;
+	case Y_AXIS:
+		x_corner = 0;
+		z_corner = 0;
+		x_edge = 1;
+		z_edge = 0;
+		temp_corner = cube[x_corner][layer][z_corner];
+		temp_edge = cube[x_edge][layer][z_edge];
+
+		for (int i = 1; i < 4; i++)
+		{
+			if (cw)
+			{
+				x_source = z_corner;
+				z_source = 2 - x_corner;
+				turn_piece(Y_AXIS, cube[x_source][layer][z_source], cube[x_corner][layer][z_corner], cw);
+				x_corner = x_source;
+				z_corner = z_source;
+
+				x_source = z_edge;
+				z_source = 2 - x_edge;
+				turn_piece(Y_AXIS, cube[x_source][layer][z_source], cube[x_edge][layer][z_edge], cw);
+				x_edge = x_source;
+				z_edge = z_source;
+			}
+			else
+			{
+				x_source = 2 - z_corner;
+				z_source = x_corner;
+				turn_piece(Y_AXIS, cube[x_source][layer][z_source], cube[x_corner][layer][z_corner], cw);
+				x_corner = x_source;
+				z_corner = z_source;
+
+				x_source = 2 - z_edge;
+				z_source = x_edge;
+				turn_piece(Y_AXIS, cube[x_source][layer][z_source], cube[x_edge][layer][z_edge], cw);
+				x_edge = x_source;
+				z_edge = z_source;
+			}
+		}
+		turn_piece(Y_AXIS, temp_corner, cube[x_corner][layer][z_corner], cw);
+		turn_piece(Y_AXIS, temp_edge, cube[x_edge][layer][z_edge], cw);
+		break;
+	case Z_AXIS:
+		x_corner = 0;
+		y_corner = 0;
+		x_edge = 0;
+		y_edge = 1;
+		temp_corner = cube[x_corner][y_corner][layer];
+		temp_edge = cube[x_edge][y_edge][layer];
+
+		for (int i = 1; i < 4; i++)
+		{
+			if (cw)
+			{
+				x_source = 2 - y_corner;
+				y_source = x_corner;
+				turn_piece(Z_AXIS, cube[x_source][y_source][layer], cube[x_corner][y_corner][layer], cw);
+				x_corner = x_source;
+				y_corner = y_source;
+
+				x_source = 2 - y_edge;
+				y_source = x_edge;
+				turn_piece(Z_AXIS, cube[x_source][y_source][layer], cube[x_edge][y_edge][layer], cw);
+				x_edge = x_source;
+				y_edge = y_source;
+			}
+			else
+			{
+				x_source = y_corner;
+				y_source = 2 - x_corner;
+				turn_piece(Z_AXIS, cube[x_source][y_source][layer], cube[x_corner][y_corner][layer], cw);
+				x_corner = x_source;
+				y_corner = y_source;
+
+				x_source = y_edge;
+				y_source = 2 - x_edge;
+				turn_piece(Z_AXIS, cube[x_source][y_source][layer], cube[x_edge][y_edge][layer], cw);
+				x_edge = x_source;
+				y_edge = y_source;
+			}
+		}
+		turn_piece(Z_AXIS, temp_corner, cube[x_corner][y_corner][layer], cw);
+		turn_piece(Z_AXIS, temp_edge, cube[x_edge][y_edge][layer], cw);
+		break;
+	default:
+		std::cerr << "ERROR: Illegal type specified for turn_layer.\n";
+	}
+}
+
 void CubeModel::turn(Turn type, bool cw)
 {
 	Piece temp;
@@ -108,88 +319,12 @@ void CubeModel::turn(Turn type, bool cw)
 		if (cw)
 		{
 			std::cout << "cw\n";
-			temp = cube[0][2][2];
-
-			cube[0][2][2].id = cube[0][0][2].id;
-			cube[0][2][2].face[UP] = cube[0][0][2].face[LEFT];
-			cube[0][2][2].face[LEFT] = cube[0][0][2].face[DOWN];
-			cube[0][2][2].face[FRONT] = cube[0][0][2].face[FRONT];
-
-			cube[0][0][2].id = cube[2][0][2].id;
-			cube[0][0][2].face[LEFT] = cube[2][0][2].face[DOWN];
-			cube[0][0][2].face[DOWN] = cube[2][0][2].face[RIGHT];
-			cube[0][0][2].face[FRONT] = cube[2][0][2].face[FRONT];
-
-			cube[2][0][2].id = cube[2][2][2].id;
-			cube[2][0][2].face[DOWN] = cube[2][2][2].face[RIGHT];
-			cube[2][0][2].face[RIGHT] = cube[2][2][2].face[UP];
-			cube[2][0][2].face[FRONT] = cube[2][2][2].face[FRONT];
-
-			cube[2][2][2].id = temp.id;
-			cube[2][2][2].face[RIGHT] = temp.face[UP];
-			cube[2][2][2].face[UP] = temp.face[LEFT];
-			cube[2][2][2].face[FRONT] = temp.face[FRONT];
-
-			temp = cube[1][2][2];
-
-			cube[1][2][2].id = cube[0][1][2].id;
-			cube[1][2][2].face[UP] = cube[0][1][2].face[LEFT];
-			cube[1][2][2].face[FRONT] = cube[0][1][2].face[FRONT];
-
-			cube[0][1][2].id = cube[1][0][2].id;
-			cube[0][1][2].face[LEFT] = cube[1][0][2].face[DOWN];
-			cube[0][1][2].face[FRONT] = cube[1][0][2].face[FRONT];
-
-			cube[1][0][2].id = cube[2][1][2].id;
-			cube[1][0][2].face[DOWN] = cube[2][1][2].face[RIGHT];
-			cube[1][0][2].face[FRONT] = cube[2][1][2].face[FRONT];
-
-			cube[2][1][2].id = temp.id;
-			cube[2][1][2].face[RIGHT] = temp.face[UP];
-			cube[2][1][2].face[FRONT] = temp.face[FRONT];
+			turn_layer(Z_AXIS, 2, true);
 		}
 		else
 		{
 			std::cout << "ccw\n";
-			temp = cube[0][2][2];
-
-			cube[0][2][2].id = cube[2][2][2].id;
-			cube[0][2][2].face[LEFT] = cube[2][2][2].face[UP];
-			cube[0][2][2].face[UP] = cube[2][2][2].face[RIGHT];
-			cube[0][2][2].face[FRONT] = cube[2][2][2].face[FRONT];
-
-			cube[2][2][2].id = cube[2][0][2].id;
-			cube[2][2][2].face[UP] = cube[2][0][2].face[RIGHT];
-			cube[2][2][2].face[RIGHT] = cube[2][0][2].face[DOWN];
-			cube[2][2][2].face[FRONT] = cube[2][0][2].face[FRONT];
-
-			cube[2][0][2].id = cube[0][0][2].id;
-			cube[2][0][2].face[RIGHT] = cube[0][0][2].face[DOWN];
-			cube[2][0][2].face[DOWN] = cube[0][0][2].face[LEFT];
-			cube[2][0][2].face[FRONT] = cube[0][0][2].face[FRONT];
-
-			cube[0][0][2].id = temp.id;
-			cube[0][0][2].face[DOWN] = temp.face[LEFT];
-			cube[0][0][2].face[LEFT] = temp.face[UP];
-			cube[0][0][2].face[FRONT] = temp.face[FRONT];
-
-			temp = cube[1][2][2];
-
-			cube[1][2][2].id = cube[2][1][2].id;
-			cube[1][2][2].face[UP] = cube[2][1][2].face[RIGHT];
-			cube[1][2][2].face[FRONT] = cube[2][1][2].face[FRONT];
-
-			cube[2][1][2].id = cube[1][0][2].id;
-			cube[2][1][2].face[RIGHT] = cube[1][0][2].face[DOWN];
-			cube[2][1][2].face[FRONT] = cube[1][0][2].face[FRONT];
-
-			cube[1][0][2].id = cube[0][1][2].id;
-			cube[1][0][2].face[DOWN] = cube[0][1][2].face[LEFT];
-			cube[1][0][2].face[FRONT] = cube[0][1][2].face[FRONT];
-
-			cube[0][1][2].id = temp.id;
-			cube[0][1][2].face[LEFT] = temp.face[UP];
-			cube[0][1][2].face[FRONT] = temp.face[FRONT];
+			turn_layer(Z_AXIS, 2, false);
 		}
 		break;
 	case BACK:
@@ -197,88 +332,14 @@ void CubeModel::turn(Turn type, bool cw)
 		if (cw)
 		{
 			std::cout << "cw\n";
-			temp = cube[0][2][0];
-
-			cube[0][2][0].id = cube[2][2][0].id;
-			cube[0][2][0].face[LEFT] = cube[2][2][0].face[UP];
-			cube[0][2][0].face[UP] = cube[2][2][0].face[RIGHT];
-			cube[0][2][0].face[BACK] = cube[2][2][0].face[BACK];
-
-			cube[2][2][0].id = cube[2][0][0].id;
-			cube[2][2][0].face[UP] = cube[2][0][0].face[RIGHT];
-			cube[2][2][0].face[RIGHT] = cube[2][0][0].face[DOWN];
-			cube[2][2][0].face[BACK] = cube[2][0][0].face[BACK];
-
-			cube[2][0][0].id = cube[0][0][0].id;
-			cube[2][0][0].face[RIGHT] = cube[0][0][0].face[DOWN];
-			cube[2][0][0].face[DOWN] = cube[0][0][0].face[LEFT];
-			cube[2][0][0].face[BACK] = cube[0][0][0].face[BACK];
-
-			cube[0][0][0].id = temp.id;
-			cube[0][0][0].face[DOWN] = temp.face[LEFT];
-			cube[0][0][0].face[LEFT] = temp.face[UP];
-			cube[2][0][2].face[BACK] = temp.face[BACK];
-
-			temp = cube[1][2][0];
-
-			cube[1][2][0].id = cube[2][1][0].id;
-			cube[1][2][0].face[UP] = cube[2][1][0].face[RIGHT];
-			cube[1][2][0].face[BACK] = cube[2][1][0].face[BACK];
-
-			cube[2][1][0].id = cube[1][0][0].id;
-			cube[2][1][0].face[RIGHT] = cube[1][0][0].face[DOWN];
-			cube[2][1][0].face[BACK] = cube[1][0][0].face[BACK];
-
-			cube[1][0][0].id = cube[0][1][0].id;
-			cube[1][0][0].face[DOWN] = cube[0][1][0].face[LEFT];
-			cube[1][0][0].face[BACK] = cube[0][1][0].face[BACK];
-
-			cube[0][1][0].id = temp.id;
-			cube[0][1][0].face[LEFT] = temp.face[UP];
-			cube[0][1][0].face[BACK] = temp.face[BACK];
+			// passing false to normalize direction of rotation
+			turn_layer(Z_AXIS, 0, false);
 		}
 		else
 		{
 			std::cout << "ccw\n";
-			temp = cube[0][2][0];
-
-			cube[0][2][0].id = cube[0][0][0].id;
-			cube[0][2][0].face[UP] = cube[0][0][0].face[LEFT];
-			cube[0][2][0].face[LEFT] = cube[0][0][0].face[DOWN];
-			cube[0][2][0].face[BACK] = cube[0][0][0].face[BACK];
-
-			cube[0][0][0].id = cube[2][0][0].id;
-			cube[0][0][0].face[LEFT] = cube[2][0][0].face[DOWN];
-			cube[0][0][0].face[DOWN] = cube[2][0][0].face[RIGHT];
-			cube[0][0][0].face[BACK] = cube[2][0][0].face[BACK];
-
-			cube[2][0][0].id = cube[2][2][0].id;
-			cube[2][0][0].face[DOWN] = cube[2][2][0].face[RIGHT];
-			cube[2][0][0].face[RIGHT] = cube[2][2][0].face[UP];
-			cube[2][0][0].face[BACK] = cube[2][2][0].face[BACK];
-
-			cube[2][2][0].id = temp.id;
-			cube[2][2][0].face[RIGHT] = temp.face[UP];
-			cube[2][2][0].face[UP] = temp.face[LEFT];
-			cube[1][0][0].face[BACK] = cube[0][1][0].face[BACK];
-
-			temp = cube[1][2][0];
-
-			cube[1][2][0].id = cube[0][1][0].id;
-			cube[1][2][0].face[UP] = cube[0][1][0].face[LEFT];
-			cube[1][2][0].face[BACK] = cube[0][1][0].face[BACK];
-
-			cube[0][1][0].id = cube[1][0][0].id;
-			cube[0][1][0].face[LEFT] = cube[1][0][0].face[DOWN];
-			cube[0][1][0].face[BACK] = cube[1][0][0].face[BACK];
-
-			cube[1][0][0].id = cube[2][1][0].id;
-			cube[1][0][0].face[DOWN] = cube[2][1][0].face[RIGHT];
-			cube[1][0][0].face[BACK] = cube[2][1][0].face[BACK];
-
-			cube[2][1][0].id = temp.id;
-			cube[2][1][0].face[RIGHT] = temp.face[UP];
-			cube[2][1][0].face[BACK] = temp.face[BACK];
+			// passing true to normalize direction of rotation
+			turn_layer(Z_AXIS, 0, true);
 		}
 		break;
 	case UP:
@@ -286,88 +347,12 @@ void CubeModel::turn(Turn type, bool cw)
 		if (cw)
 		{
 			std::cout << "cw\n";
-			temp = cube[0][2][0];
-
-			cube[0][2][0].id = cube[0][2][2].id;
-			cube[0][2][0].face[BACK] = cube[0][2][2].face[LEFT];
-			cube[0][2][0].face[LEFT] = cube[0][2][2].face[FRONT];
-			cube[0][2][0].face[UP] = cube[0][2][2].face[UP];
-
-			cube[0][2][2].id = cube[2][2][2].id;
-			cube[0][2][2].face[LEFT] = cube[2][2][2].face[FRONT];
-			cube[0][2][2].face[FRONT] = cube[2][2][2].face[RIGHT];
-			cube[0][2][2].face[UP] = cube[2][2][2].face[UP];
-
-			cube[2][2][2].id = cube[2][2][0].id;
-			cube[2][2][2].face[FRONT] = cube[2][2][0].face[RIGHT];
-			cube[2][2][2].face[RIGHT] = cube[2][2][0].face[BACK];
-			cube[2][2][2].face[UP] = cube[2][2][0].face[UP];
-
-			cube[2][2][0].id = temp.id;
-			cube[2][2][0].face[RIGHT] = temp.face[BACK];
-			cube[2][2][0].face[BACK] = temp.face[LEFT];
-			cube[2][2][0].face[UP] = temp.face[UP];
-
-			temp = cube[1][2][0];
-
-			cube[1][2][0].id = cube[0][2][1].id;
-			cube[1][2][0].face[BACK] = cube[0][2][1].face[LEFT];
-			cube[1][2][0].face[UP] = cube[0][2][1].face[UP];
-
-			cube[0][2][1].id = cube[1][2][2].id;
-			cube[0][2][1].face[LEFT] = cube[1][2][2].face[FRONT];
-			cube[0][2][1].face[UP] = cube[1][2][2].face[UP];
-
-			cube[1][2][2].id = cube[2][2][1].id;
-			cube[1][2][2].face[FRONT] = cube[2][2][1].face[RIGHT];
-			cube[1][2][2].face[UP] = cube[2][2][1].face[UP];
-
-			cube[2][2][1].id = temp.id;
-			cube[2][2][1].face[RIGHT] = temp.face[BACK];
-			cube[2][2][1].face[UP] = temp.face[UP];
+			turn_layer(Y_AXIS, 2, true);
 		}
 		else
 		{
 			std::cout << "ccw\n";
-			temp = cube[0][2][0];
-
-			cube[0][2][0].id = cube[2][2][0].id;
-			cube[0][2][0].face[LEFT] = cube[2][2][0].face[BACK];
-			cube[0][2][0].face[BACK] = cube[2][2][0].face[RIGHT];
-			cube[0][2][0].face[UP] = cube[2][2][0].face[UP];
-
-			cube[2][2][0].id = cube[2][2][2].id;
-			cube[2][2][0].face[BACK] = cube[2][2][2].face[RIGHT];
-			cube[2][2][0].face[RIGHT] = cube[2][2][2].face[FRONT];
-			cube[2][2][0].face[UP] = cube[2][2][2].face[UP];
-
-			cube[2][2][2].id = cube[0][2][2].id;
-			cube[2][2][2].face[RIGHT] = cube[0][2][2].face[FRONT];
-			cube[2][2][2].face[FRONT] = cube[0][2][2].face[LEFT];
-			cube[2][2][2].face[UP] = cube[0][2][2].face[UP];
-
-			cube[0][2][2].id = temp.id;
-			cube[0][2][2].face[FRONT] = temp.face[LEFT];
-			cube[0][2][2].face[LEFT] = temp.face[BACK];
-			cube[0][2][2].face[UP] = temp.face[UP];
-
-			temp = cube[1][2][0];
-
-			cube[1][2][0].id = cube[2][2][1].id;
-			cube[1][2][0].face[BACK] = cube[2][2][1].face[RIGHT];
-			cube[1][2][0].face[UP] = cube[2][2][1].face[UP];
-
-			cube[2][2][1].id = cube[1][2][2].id;
-			cube[2][2][1].face[RIGHT] = cube[1][2][2].face[FRONT];
-			cube[2][2][1].face[UP] = cube[1][2][2].face[UP];
-
-			cube[1][2][2].id = cube[0][2][1].id;
-			cube[1][2][2].face[FRONT] = cube[0][2][1].face[LEFT];
-			cube[1][2][2].face[UP] = cube[0][2][1].face[UP];
-
-			cube[0][2][1].id = temp.id;
-			cube[0][2][1].face[LEFT] = temp.face[BACK];
-			cube[0][2][1].face[UP] = temp.face[UP];
+			turn_layer(Y_AXIS, 2, false);
 		}
 		break;
 	case DOWN:
@@ -375,88 +360,14 @@ void CubeModel::turn(Turn type, bool cw)
 		if (cw)
 		{
 			std::cout << "cw\n";
-			temp = cube[0][0][0];
-
-			cube[0][0][0].id = cube[2][0][0].id;
-			cube[0][0][0].face[LEFT] = cube[2][0][0].face[BACK];
-			cube[0][0][0].face[BACK] = cube[2][0][0].face[RIGHT];
-			cube[0][0][0].face[DOWN] = cube[2][0][0].face[DOWN];
-
-			cube[2][0][0].id = cube[2][0][2].id;
-			cube[2][0][0].face[BACK] = cube[2][0][2].face[RIGHT];
-			cube[2][0][0].face[RIGHT] = cube[2][0][2].face[FRONT];
-			cube[2][0][0].face[DOWN] = cube[2][0][2].face[DOWN];
-
-			cube[2][0][2].id = cube[0][0][2].id;
-			cube[2][0][2].face[RIGHT] = cube[0][0][2].face[FRONT];
-			cube[2][0][2].face[FRONT] = cube[0][0][2].face[LEFT];
-			cube[2][0][2].face[DOWN] = cube[0][0][2].face[DOWN];
-
-			cube[0][0][2].id = temp.id;
-			cube[0][0][2].face[FRONT] = temp.face[LEFT];
-			cube[0][0][2].face[LEFT] = temp.face[BACK];
-			cube[0][0][2].face[DOWN] = temp.face[DOWN];
-
-			temp = cube[1][0][0];
-
-			cube[1][0][0].id = cube[2][0][1].id;
-			cube[1][0][0].face[BACK] = cube[2][0][1].face[RIGHT];
-			cube[1][0][0].face[DOWN] = cube[2][0][1].face[DOWN];
-
-			cube[2][0][1].id = cube[1][0][2].id;
-			cube[2][0][1].face[RIGHT] = cube[1][0][2].face[FRONT];
-			cube[2][0][1].face[DOWN] = cube[1][0][2].face[DOWN];
-
-			cube[1][0][2].id = cube[0][0][1].id;
-			cube[1][0][2].face[FRONT] = cube[0][0][1].face[LEFT];
-			cube[1][0][2].face[DOWN] = cube[0][0][1].face[DOWN];
-
-			cube[0][0][1].id = temp.id;
-			cube[0][0][1].face[LEFT] = temp.face[BACK];
-			cube[0][0][1].face[DOWN] = temp.face[DOWN];
+			// passing false to normalize direction of rotation
+			turn_layer(Y_AXIS, 0, false);
 		}
 		else
 		{
 			std::cout << "ccw\n";
-			temp = cube[0][0][0];
-
-			cube[0][0][0].id = cube[0][0][2].id;
-			cube[0][0][0].face[BACK] = cube[0][0][2].face[LEFT];
-			cube[0][0][0].face[LEFT] = cube[0][0][2].face[FRONT];
-			cube[0][0][0].face[DOWN] = cube[0][0][2].face[DOWN];
-
-			cube[0][0][2].id = cube[2][0][2].id;
-			cube[0][0][2].face[LEFT] = cube[2][0][2].face[FRONT];
-			cube[0][0][2].face[FRONT] = cube[2][0][2].face[RIGHT];
-			cube[0][0][2].face[DOWN] = cube[2][0][2].face[DOWN];
-
-			cube[2][0][2].id = cube[2][0][0].id;
-			cube[2][0][2].face[FRONT] = cube[2][0][0].face[RIGHT];
-			cube[2][0][2].face[RIGHT] = cube[2][0][0].face[BACK];
-			cube[2][0][2].face[DOWN] = cube[2][0][0].face[DOWN];
-
-			cube[2][0][0].id = temp.id;
-			cube[2][0][0].face[RIGHT] = temp.face[BACK];
-			cube[2][0][0].face[BACK] = temp.face[LEFT];
-			cube[2][0][0].face[DOWN] = temp.face[DOWN];
-
-			temp = cube[1][0][0];
-
-			cube[1][0][0].id = cube[0][0][1].id;
-			cube[1][0][0].face[BACK] = cube[0][0][1].face[LEFT];
-			cube[1][0][0].face[DOWN] = cube[0][0][1].face[DOWN];
-
-			cube[0][0][1].id = cube[1][0][2].id;
-			cube[0][0][1].face[LEFT] = cube[1][0][2].face[FRONT];
-			cube[0][0][1].face[DOWN] = cube[1][0][2].face[DOWN];
-
-			cube[1][0][2].id = cube[2][0][1].id;
-			cube[1][0][2].face[FRONT] = cube[2][0][1].face[RIGHT];
-			cube[1][0][2].face[DOWN] = cube[2][0][1].face[DOWN];
-
-			cube[2][0][1].id = temp.id;
-			cube[2][0][1].face[RIGHT] = temp.face[BACK];
-			cube[2][0][1].face[DOWN] = temp.face[DOWN];
+			// passing true to normalize direction of rotation
+			turn_layer(Y_AXIS, 0, true);
 		}
 		break;
 	case LEFT:
@@ -464,88 +375,14 @@ void CubeModel::turn(Turn type, bool cw)
 		if (cw)
 		{
 			std::cout << "cw\n";
-			temp = cube[0][2][0];
-
-			cube[0][2][0].id = cube[0][0][0].id;
-			cube[0][2][0].face[UP] = cube[0][0][0].face[BACK];
-			cube[0][2][0].face[BACK] = cube[0][0][0].face[DOWN];
-			cube[0][2][0].face[LEFT] = cube[0][0][0].face[LEFT];
-
-			cube[0][0][0].id = cube[0][0][2].id;
-			cube[0][0][0].face[BACK] = cube[0][0][2].face[DOWN];
-			cube[0][0][0].face[DOWN] = cube[0][0][2].face[FRONT];
-			cube[0][0][0].face[LEFT] = cube[0][0][2].face[LEFT];
-
-			cube[0][0][2].id = cube[0][2][2].id;
-			cube[0][0][2].face[DOWN] = cube[0][2][2].face[FRONT];
-			cube[0][0][2].face[FRONT] = cube[0][2][2].face[UP];
-			cube[0][0][2].face[LEFT] = cube[0][2][2].face[LEFT];
-
-			cube[0][2][2].id = temp.id;
-			cube[0][2][2].face[FRONT] = temp.face[UP];
-			cube[0][2][2].face[UP] = temp.face[BACK];
-			cube[0][2][2].face[LEFT] = temp.face[LEFT];
-
-			temp = cube[0][2][1];
-
-			cube[0][2][1].id = cube[0][1][0].id;
-			cube[0][2][1].face[UP] = cube[0][1][0].face[BACK];
-			cube[0][2][1].face[LEFT] = cube[0][1][0].face[LEFT];
-
-			cube[0][1][0].id = cube[0][0][1].id;
-			cube[0][1][0].face[BACK] = cube[0][0][1].face[DOWN];
-			cube[0][1][0].face[LEFT] = cube[0][0][1].face[LEFT];
-
-			cube[0][0][1].id = cube[0][1][2].id;
-			cube[0][0][1].face[DOWN] = cube[0][1][2].face[FRONT];
-			cube[0][0][1].face[LEFT] = cube[0][1][2].face[LEFT];
-
-			cube[0][1][2].id = temp.id;
-			cube[0][1][2].face[FRONT] = temp.face[UP];
-			cube[0][1][2].face[LEFT] = temp.face[LEFT];
+			// passing false to normalize direction of rotation
+			turn_layer(X_AXIS, 0, false);
 		}
 		else
 		{
 			std::cout << "ccw\n";
-			temp = cube[0][2][0];
-
-			cube[0][2][0].id = cube[0][2][2].id;
-			cube[0][2][0].face[BACK] = cube[0][2][2].face[UP];
-			cube[0][2][0].face[UP] = cube[0][2][2].face[FRONT];
-			cube[0][2][0].face[LEFT] = cube[0][2][2].face[LEFT];
-
-			cube[0][2][2].id = cube[0][0][2].id;
-			cube[0][2][2].face[UP] = cube[0][0][2].face[FRONT];
-			cube[0][2][2].face[FRONT] = cube[0][0][2].face[DOWN];
-			cube[0][2][2].face[LEFT] = cube[0][0][2].face[LEFT];
-
-			cube[0][0][2].id = cube[0][0][0].id;
-			cube[0][0][2].face[FRONT] = cube[0][0][0].face[DOWN];
-			cube[0][0][2].face[DOWN] = cube[0][0][0].face[BACK];
-			cube[0][0][2].face[LEFT] = cube[0][0][0].face[LEFT];
-
-			cube[0][0][0].id = temp.id;
-			cube[0][0][0].face[DOWN] = temp.face[BACK];
-			cube[0][0][0].face[BACK] = temp.face[UP];
-			cube[0][0][0].face[LEFT] = temp.face[LEFT];
-
-			temp = cube[0][2][1];
-
-			cube[0][2][1].id = cube[0][1][2].id;
-			cube[0][2][1].face[UP] = cube[0][1][2].face[FRONT];
-			cube[0][2][1].face[LEFT] = cube[0][1][2].face[LEFT];
-
-			cube[0][1][2].id = cube[0][0][1].id;
-			cube[0][1][2].face[FRONT] = cube[0][0][1].face[DOWN];
-			cube[0][1][2].face[LEFT] = cube[0][0][1].face[LEFT];
-
-			cube[0][0][1].id = cube[0][1][0].id;
-			cube[0][0][1].face[DOWN] = cube[0][1][0].face[BACK];
-			cube[0][0][1].face[LEFT] = cube[0][1][0].face[LEFT];
-
-			cube[0][1][0].id = temp.id;
-			cube[0][1][0].face[BACK] = temp.face[UP];
-			cube[0][1][0].face[LEFT] = temp.face[LEFT];
+			// passing true to normalize direction of rotation
+			turn_layer(X_AXIS, 0, true);
 		}
 		break;
 	case RIGHT:
@@ -553,88 +390,12 @@ void CubeModel::turn(Turn type, bool cw)
 		if (cw)
 		{
 			std::cout << "cw\n";
-			temp = cube[2][2][0];
-
-			cube[2][2][0].id = cube[2][2][2].id;
-			cube[2][2][0].face[BACK] = cube[2][2][2].face[UP];
-			cube[2][2][0].face[UP] = cube[2][2][2].face[FRONT];
-			cube[2][2][0].face[RIGHT] = cube[2][2][2].face[RIGHT];
-
-			cube[2][2][2].id = cube[2][0][2].id;
-			cube[2][2][2].face[UP] = cube[2][0][2].face[FRONT];
-			cube[2][2][2].face[FRONT] = cube[2][0][2].face[DOWN];
-			cube[2][2][2].face[RIGHT] = cube[2][0][2].face[RIGHT];
-
-			cube[2][0][2].id = cube[2][0][0].id;
-			cube[2][0][2].face[FRONT] = cube[2][0][0].face[DOWN];
-			cube[2][0][2].face[DOWN] = cube[2][0][0].face[BACK];
-			cube[2][0][2].face[RIGHT] = cube[2][0][0].face[RIGHT];
-
-			cube[2][0][0].id = temp.id;
-			cube[2][0][0].face[DOWN] = temp.face[BACK];
-			cube[2][0][0].face[BACK] = temp.face[UP];
-			cube[2][0][0].face[RIGHT] = temp.face[RIGHT];
-
-			temp = cube[2][2][1];
-
-			cube[2][2][1].id = cube[2][1][2].id;
-			cube[2][2][1].face[UP] = cube[2][1][2].face[FRONT];
-			cube[2][2][1].face[RIGHT] = cube[2][1][2].face[RIGHT];
-
-			cube[2][1][2].id = cube[2][0][1].id;
-			cube[2][1][2].face[FRONT] = cube[2][0][1].face[DOWN];
-			cube[2][1][2].face[RIGHT] = cube[2][0][1].face[RIGHT];
-
-			cube[2][0][1].id = cube[2][1][0].id;
-			cube[2][0][1].face[DOWN] = cube[2][1][0].face[BACK];
-			cube[2][0][1].face[RIGHT] = cube[2][1][0].face[RIGHT];
-
-			cube[2][1][0].id = temp.id;
-			cube[2][1][0].face[BACK] = temp.face[UP];
-			cube[2][1][0].face[RIGHT] = temp.face[RIGHT];
+			turn_layer(X_AXIS, 2, true);
 		}
 		else
 		{
 			std::cout << "ccw\n";
-			temp = cube[2][2][0];
-
-			cube[2][2][0].id = cube[2][0][0].id;
-			cube[2][2][0].face[UP] = cube[2][0][0].face[BACK];
-			cube[2][2][0].face[BACK] = cube[2][0][0].face[DOWN];
-			cube[2][2][0].face[RIGHT] = cube[2][0][0].face[RIGHT];
-
-			cube[2][0][0].id = cube[2][0][2].id;
-			cube[2][0][0].face[BACK] = cube[2][0][2].face[DOWN];
-			cube[2][0][0].face[DOWN] = cube[2][0][2].face[FRONT];
-			cube[2][0][0].face[RIGHT] = cube[2][0][2].face[RIGHT];
-
-			cube[2][0][2].id = cube[2][2][2].id;
-			cube[2][0][2].face[DOWN] = cube[2][2][2].face[FRONT];
-			cube[2][0][2].face[FRONT] = cube[2][2][2].face[UP];
-			cube[2][0][2].face[RIGHT] = cube[2][2][2].face[RIGHT];
-
-			cube[2][2][2].id = temp.id;
-			cube[2][2][2].face[FRONT] = temp.face[UP];
-			cube[2][2][2].face[UP] = temp.face[BACK];
-			cube[2][2][2].face[RIGHT] = temp.face[RIGHT];
-
-			temp = cube[2][2][1];
-
-			cube[2][2][1].id = cube[2][1][0].id;
-			cube[2][2][1].face[UP] = cube[2][1][0].face[BACK];
-			cube[2][2][1].face[RIGHT] = cube[2][1][0].face[RIGHT];
-
-			cube[2][1][0].id = cube[2][0][1].id;
-			cube[2][1][0].face[BACK] = cube[2][0][1].face[DOWN];
-			cube[2][1][0].face[RIGHT] = cube[2][0][1].face[RIGHT];
-
-			cube[2][0][1].id = cube[2][1][2].id;
-			cube[2][0][1].face[DOWN] = cube[2][1][2].face[FRONT];
-			cube[2][0][1].face[RIGHT] = cube[2][1][2].face[RIGHT];
-
-			cube[2][1][2].id = temp.id;
-			cube[2][1][2].face[FRONT] = temp.face[UP];
-			cube[2][1][2].face[RIGHT] = temp.face[RIGHT];
+			turn_layer(X_AXIS, 2, false);
 		}
 		break;
 	case X_AXIS:
@@ -642,78 +403,16 @@ void CubeModel::turn(Turn type, bool cw)
 		if (cw)
 		{
 			std::cout << "cw\n";
-			turn(LEFT, false);
-			turn(RIGHT, true);
-
-			temp = cube[1][2][2];
-
-			cube[1][2][2].id = cube[1][0][2].id;
-			cube[1][2][2].face[UP] = cube[1][0][2].face[FRONT];
-			cube[1][2][2].face[FRONT] = cube[1][0][2].face[DOWN];
-
-			cube[1][0][2].id = cube[1][0][0].id;
-			cube[1][0][2].face[FRONT] = cube[1][0][0].face[DOWN];
-			cube[1][0][2].face[DOWN] = cube[1][0][0].face[BACK];
-
-			cube[1][0][0].id = cube[1][2][0].id;
-			cube[1][0][0].face[DOWN] = cube[1][2][0].face[BACK];
-			cube[1][0][0].face[BACK] = cube[1][2][0].face[UP];
-
-			cube[1][2][0].id = temp.id;
-			cube[1][2][0].face[BACK] = temp.face[UP];
-			cube[1][2][0].face[UP] = temp.face[FRONT];
-
-			temp = cube[1][2][1];
-
-			cube[1][2][1].id = cube[1][1][2].id;
-			cube[1][2][1].face[UP] = cube[1][1][2].face[FRONT];
-
-			cube[1][1][2].id = cube[1][0][1].id;
-			cube[1][1][2].face[FRONT] = cube[1][0][1].face[DOWN];
-
-			cube[1][0][1].id = cube[1][1][0].id;
-			cube[1][0][1].face[DOWN] = cube[1][1][0].face[BACK];
-
-			cube[1][1][0].id = temp.id;
-			cube[1][1][0].face[BACK] = temp.face[UP];
+			turn_layer(X_AXIS, 0, true);
+			turn_layer(X_AXIS, 1, true);
+			turn_layer(X_AXIS, 2, true);
 		}
 		else
 		{
 			std::cout << "ccw\n";
-			turn(LEFT, true);
-			turn(RIGHT, false);
-
-			temp = cube[1][2][2];
-
-			cube[1][2][2].id = cube[1][2][0].id;
-			cube[1][2][2].face[FRONT] = cube[1][2][0].face[UP];
-			cube[1][2][2].face[UP] = cube[1][2][0].face[BACK];
-
-			cube[1][2][0].id = cube[1][0][0].id;
-			cube[1][2][0].face[UP] = cube[1][0][0].face[BACK];
-			cube[1][2][0].face[BACK] = cube[1][0][0].face[DOWN];
-
-			cube[1][0][0].id = cube[1][0][2].id;
-			cube[1][0][0].face[BACK] = cube[1][0][2].face[DOWN];
-			cube[1][0][0].face[DOWN] = cube[1][0][2].face[FRONT];
-
-			cube[1][0][2].id = temp.id;
-			cube[1][0][2].face[DOWN] = temp.face[FRONT];
-			cube[1][0][2].face[FRONT] = temp.face[UP];
-
-			temp = cube[1][2][1];
-
-			cube[1][2][1].id = cube[1][1][0].id;
-			cube[1][2][1].face[UP] = cube[1][1][0].face[BACK];
-
-			cube[1][1][0].id = cube[1][0][1].id;
-			cube[1][1][0].face[BACK] = cube[1][0][1].face[DOWN];
-
-			cube[1][0][1].id = cube[1][1][2].id;
-			cube[1][0][1].face[DOWN] = cube[1][1][2].face[FRONT];
-
-			cube[1][1][2].id = temp.id;
-			cube[1][1][2].face[FRONT] = temp.face[UP];
+			turn_layer(X_AXIS, 0, false);
+			turn_layer(X_AXIS, 1, false);
+			turn_layer(X_AXIS, 2, false);
 		}
 		break;
 	case Y_AXIS:
@@ -721,78 +420,16 @@ void CubeModel::turn(Turn type, bool cw)
 		if (cw)
 		{
 			std::cout << "cw\n";
-			turn(UP, true);
-			turn(DOWN, false);
-
-			temp = cube[0][1][0];
-
-			cube[0][1][0].id = cube[0][1][2].id;
-			cube[0][1][0].face[BACK] = cube[0][1][2].face[LEFT];
-			cube[0][1][0].face[LEFT] = cube[0][1][2].face[FRONT];
-
-			cube[0][1][2].id = cube[2][1][2].id;
-			cube[0][1][2].face[LEFT] = cube[2][1][2].face[FRONT];
-			cube[0][1][2].face[FRONT] = cube[2][1][2].face[RIGHT];
-
-			cube[2][1][2].id = cube[2][1][0].id;
-			cube[2][1][2].face[FRONT] = cube[2][1][0].face[RIGHT];
-			cube[2][1][2].face[RIGHT] = cube[2][1][0].face[BACK];
-
-			cube[2][1][0].id = temp.id;
-			cube[2][1][0].face[RIGHT] = temp.face[BACK];
-			cube[2][1][0].face[BACK] = temp.face[LEFT];
-
-			temp = cube[1][1][0];
-
-			cube[1][1][0].id = cube[0][1][1].id;
-			cube[1][1][0].face[BACK] = cube[0][1][1].face[LEFT];
-
-			cube[0][1][1].id = cube[1][1][2].id;
-			cube[0][1][1].face[LEFT] = cube[1][1][2].face[FRONT];
-
-			cube[1][1][2].id = cube[2][1][1].id;
-			cube[1][1][2].face[FRONT] = cube[2][1][1].face[RIGHT];
-
-			cube[2][1][1].id = temp.id;
-			cube[2][1][1].face[RIGHT] = temp.face[BACK];
+			turn_layer(Y_AXIS, 0, true);
+			turn_layer(Y_AXIS, 1, true);
+			turn_layer(Y_AXIS, 2, true);
 		}
 		else
 		{
 			std::cout << "ccw\n";
-			turn(UP, false);
-			turn(DOWN, true);
-
-			temp = cube[0][1][0];
-
-			cube[0][1][0].id = cube[2][1][0].id;
-			cube[0][1][0].face[LEFT] = cube[2][1][0].face[BACK];
-			cube[0][1][0].face[BACK] = cube[2][1][0].face[RIGHT];
-
-			cube[2][1][0].id = cube[2][1][2].id;
-			cube[2][1][0].face[BACK] = cube[2][1][2].face[RIGHT];
-			cube[2][1][0].face[RIGHT] = cube[2][1][2].face[FRONT];
-
-			cube[2][1][2].id = cube[0][1][2].id;
-			cube[2][1][2].face[RIGHT] = cube[0][1][2].face[FRONT];
-			cube[2][1][2].face[FRONT] = cube[0][1][2].face[LEFT];
-
-			cube[0][1][2].id = temp.id;
-			cube[0][1][2].face[FRONT] = temp.face[LEFT];
-			cube[0][1][2].face[LEFT] = temp.face[BACK];
-
-			temp = cube[1][1][0];
-
-			cube[1][1][0].id = cube[2][1][1].id;
-			cube[1][1][0].face[BACK] = cube[2][1][1].face[RIGHT];
-
-			cube[2][1][1].id = cube[1][1][2].id;
-			cube[2][1][1].face[RIGHT] = cube[1][1][2].face[FRONT];
-
-			cube[1][1][2].id = cube[0][1][1].id;
-			cube[1][1][2].face[FRONT] = cube[0][1][1].face[LEFT];
-
-			cube[0][1][1].id = temp.id;
-			cube[0][1][1].face[LEFT] = temp.face[BACK];
+			turn_layer(Y_AXIS, 0, false);
+			turn_layer(Y_AXIS, 1, false);
+			turn_layer(Y_AXIS, 2, false);
 		}
 		break;
 	case Z_AXIS:
@@ -800,78 +437,16 @@ void CubeModel::turn(Turn type, bool cw)
 		if (cw)
 		{
 			std::cout << "cw\n";
-			turn(FRONT, true);
-			turn(BACK, false);
-
-			temp = cube[0][2][1];
-
-			cube[0][2][1].id = cube[0][0][1].id;
-			cube[0][2][1].face[UP] = cube[0][0][1].face[LEFT];
-			cube[0][2][1].face[LEFT] = cube[0][0][1].face[DOWN];
-
-			cube[0][0][1].id = cube[2][0][1].id;
-			cube[0][0][1].face[LEFT] = cube[2][0][1].face[DOWN];
-			cube[0][0][1].face[DOWN] = cube[2][0][1].face[RIGHT];
-
-			cube[2][0][1].id = cube[2][2][1].id;
-			cube[2][0][1].face[DOWN] = cube[2][2][1].face[RIGHT];
-			cube[2][0][1].face[RIGHT] = cube[2][2][1].face[UP];
-
-			cube[2][2][1].id = temp.id;
-			cube[2][2][1].face[RIGHT] = temp.face[UP];
-			cube[2][2][1].face[UP] = temp.face[LEFT];
-
-			temp = cube[1][2][1];
-
-			cube[1][2][1].id = cube[0][1][1].id;
-			cube[1][2][1].face[UP] = cube[0][1][1].face[LEFT];
-
-			cube[0][1][1].id = cube[1][0][1].id;
-			cube[0][1][1].face[LEFT] = cube[1][0][1].face[DOWN];
-
-			cube[1][0][1].id = cube[2][1][1].id;
-			cube[1][0][1].face[DOWN] = cube[2][1][1].face[RIGHT];
-
-			cube[2][1][1].id = temp.id;
-			cube[2][1][1].face[RIGHT] = temp.face[UP];
+			turn_layer(Z_AXIS, 0, true);
+			turn_layer(Z_AXIS, 1, true);
+			turn_layer(Z_AXIS, 2, true);
 		}
 		else
 		{
 			std::cout << "ccw\n";
-			turn(FRONT, false);
-			turn(BACK, true);
-
-			temp = cube[0][2][1];
-
-			cube[0][2][1].id = cube[2][2][1].id;
-			cube[0][2][1].face[LEFT] = cube[2][2][1].face[UP];
-			cube[0][2][1].face[UP] = cube[2][2][1].face[RIGHT];
-
-			cube[2][2][1].id = cube[2][0][1].id;
-			cube[2][2][1].face[UP] = cube[2][0][1].face[RIGHT];
-			cube[2][2][1].face[RIGHT] = cube[2][0][1].face[DOWN];
-
-			cube[2][0][1].id = cube[0][0][1].id;
-			cube[2][0][1].face[RIGHT] = cube[0][0][1].face[DOWN];
-			cube[2][0][1].face[DOWN] = cube[0][0][1].face[LEFT];
-
-			cube[0][0][1].id = temp.id;
-			cube[0][0][1].face[DOWN] = temp.face[LEFT];
-			cube[0][0][1].face[LEFT] = temp.face[UP];
-
-			temp = cube[1][2][1];
-
-			cube[1][2][1].id = cube[2][1][1].id;
-			cube[1][2][1].face[UP] = cube[2][1][1].face[RIGHT];
-
-			cube[2][1][1].id = cube[1][0][1].id;
-			cube[2][1][1].face[RIGHT] = cube[1][0][1].face[DOWN];
-
-			cube[1][0][1].id = cube[0][1][1].id;
-			cube[1][0][1].face[DOWN] = cube[0][1][1].face[LEFT];
-
-			cube[0][1][1].id = temp.id;
-			cube[0][1][1].face[LEFT] = temp.face[UP];
+			turn_layer(Z_AXIS, 0, false);
+			turn_layer(Z_AXIS, 1, false);
+			turn_layer(Z_AXIS, 2, false);
 		}
 		break;
 	}

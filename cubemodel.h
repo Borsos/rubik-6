@@ -60,6 +60,12 @@ class CubeModel
 		/** The future moves stack. These moves have not been turned, yet. Some features, like "Redo" or requesting the next move from an iterator, pop moves from this stack, turn them and push them back onto the pastMovesStack. */
 		std::vector<Move> futureMovesStack;
 
+		/** Helper function. Replaces destination piece with source piece, turning the source piece */
+		void turn_piece(Turn type, Piece& source, Piece& destination, bool cw);
+
+		/** Helper function. Turns a layer around the specified axus */
+		void turn_layer(Turn type, int layer, bool cw);
+
 	public:
 		/** Default constructor. */
 		CubeModel();

@@ -297,6 +297,7 @@ void CubeWidget::timerEvent(QTimerEvent* event)
 			rotation.type = (CubeModel::Turn) (rand() % 9);
 			//rotation.type = CubeModel::Z_AXIS;
 			rotation.cw = (bool) (rand() % 2);
+			//rotation.cw = true;
 		}
 	}
 	
