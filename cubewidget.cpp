@@ -205,7 +205,7 @@ void CubeWidget::initializeGL()
 	
 	animationTimer = startTimer(1000 / FRAMES_PER_SECOND);
 
-	isRotating = true;
+	//isRotating = true;
 	rotation.type = CubeModel::Z_AXIS;
 	//rotation.cw = false;
 	rotation.cw = true;
@@ -232,7 +232,8 @@ void CubeWidget::paintGL()
 
 	glTranslatef(0.0f, 0.0f, -16.0f);
 
-	glBegin(GL_LINES); // global rotation axix
+	glBegin(GL_LINES);
+	// global rotation axix
 	glColor3f(1.0f, 1.0f, 1.0f); // white
 	glVertex3f(0.0f, 0.0f, 0.0f);
 	glVertex3f(10.0f, -10.0f, 0.0f);
@@ -280,6 +281,13 @@ void CubeWidget::paintGL()
 	}
 
 	renderCube();
+
+	glBegin(GL_LINES);
+	// picking ray
+	glColor3f(1.0f, 0.0f, 1.0f); // pink
+	glVertex3d(x_near, y_near, z_near);
+	glVertex3d(x_far, y_far, z_far);
+	glEnd();
 }
 
 void CubeWidget::timerEvent(QTimerEvent* event)
@@ -310,6 +318,25 @@ void CubeWidget::mousePressEvent(QMouseEvent* event)
 	if (event->button() == Qt::LeftButton)
 	{
 		std::cout << "left click @ " << event->x() << ", " << event->y() << std::endl;
+
+		GLint viewport[4];
+		GLdouble mv_matrix[16], p_matrix[16];
+		GLint y_converted;
+		GLdouble wx, wy, wz;
+
+		glGetIntegerv(GL_VIEWPORT, viewport);
+		glGetDoublev(GL_MODELVIEW_MATRIX, mv_matrix);
+		glGetDoublev(GL_PROJECTION_MATRIX, p_matrix);
+
+		y_converted = viewport[3] - (GLint) event->y() - 1;
+		std::cout << "converted coordinates: " << event->x() << ", " << y_converted << std::endl;
+
+		gluUnProject((GLdouble) event->x(), (GLdouble) y_converted, 0.0, mv_matrix, p_matrix, viewport, &x_near, &y_near, &z_near);
+		std::cout << "world coordinates @ near: " << x_near << ", " << y_near << ", " << z_near << std::endl;
+		gluUnProject((GLdouble) event->x(), (GLdouble) y_converted, 1.0, mv_matrix, p_matrix, viewport, &x_far, &y_far, &z_far);
+		std::cout << "world coordinates @ far: " << x_far << ", " << y_far << ", " << z_far << std::endl;
+
+		updateGL();
 	}
 }
 

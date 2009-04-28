@@ -20,6 +20,9 @@ class CubeWidget : public QGLWidget
 		bool isRotating;
 		CubeModel::Move rotation;
 		float rotationAngle;
+		
+		GLdouble x_near, y_near, z_near;
+		GLdouble x_far, y_far, z_far;
 
 		void setColor(CubeModel::Color color);
 		void renderPiece(CubeModel::Piece& piece);
