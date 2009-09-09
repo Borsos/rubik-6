@@ -1,4 +1,4 @@
-#include "point4.h"
+#include "vector4.h"
 
 Vector4::Vector4(const float values[4])
 {
@@ -19,6 +19,7 @@ Vector4::~Vector4()
 
 const float[] Vector4::getValues()
 {
+	return values;
 }
 
 const float Vector4::getLength2() const
@@ -33,7 +34,13 @@ const float Vector4::getLength() const
 	return sqrt(getLength2());
 }
 
-void Vector4::normalize()
+void Vector4::normalizeExact()
+{
+	float length = getLength();
+	for (int i = 0; i < 4; i++) values[i] = values[i] / length;	
+}
+
+void Vector4::normalizeFast()
 {
 	float length2 = getLength2();
 	float half_l2 = 0.5f * length2;
@@ -43,6 +50,31 @@ void Vector4::normalize()
 	length2 = *(float*)&i;
 	float inv_length = x * (1.5f - half_l2 * x * x);
 
-	for (int i = 0; i < 3; i++) values[i] = inv_length * values[i];
+	for (int i = 0; i < 4; i++) values[i] = inv_length * values[i];
+}
+
+Vector4& Vector4::operator+(Vector4& other)
+{
+	for (int i = 0; i < 4; i++) values[i] = values[i] + other[i];
+}
+
+Vector4& Vector4::operator-(Vector4& other)
+{
+	for (int i = 0; i < 4; i++) values[i] = values[i] - other[i];
+}
+
+Vector4& Vector4::operator*(Vector4& other)
+{
+	// cross product
+}
+
+Vector4& Vector4::operator*(float other)
+{
+	for (int i = 0; i < 4; i++) values[i] = values[i] * other;
+}
+
+Vector4& Vector4::operator*(int other)
+{
+	for (int i = 0; i < 4; i++) values[i] = values[i] * other;
 }
 

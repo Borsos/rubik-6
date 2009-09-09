@@ -12,4 +12,11 @@ public:
 	const float[4] getValues();
 	const float getLength();
 	void normalize();
+
+	float& operator[] (int i);
+	Vector4& operator+ (Vector4& other);
+	Vector4& operator- (Vector4& other);
+	Vector4& operator* (Vector4& other);
+	Vector4& operator* (float other);
+	Vector4& operator* (int other);
 };

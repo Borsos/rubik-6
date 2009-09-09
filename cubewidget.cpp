@@ -205,7 +205,7 @@ void CubeWidget::initializeGL()
 	
 	animationTimer = startTimer(1000 / FRAMES_PER_SECOND);
 
-	//isRotating = true;
+	isRotating = true;
 	rotation.type = CubeModel::Z_AXIS;
 	//rotation.cw = false;
 	rotation.cw = true;

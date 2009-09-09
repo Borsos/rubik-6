@@ -328,7 +328,7 @@ void CubeModel::turn(Turn type, bool cw)
 		}
 		break;
 	case BACK:
-		std::cout << "back\n";
+		std::cout << "back ";
 		if (cw)
 		{
 			std::cout << "cw\n";
