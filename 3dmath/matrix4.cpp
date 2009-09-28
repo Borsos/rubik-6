@@ -1,3 +1,6 @@
+#include "matrix4.h"
+#include "vector4.h"
+
 Matrix4::Matrix(const float values[])
 {
     	for (int = 0; i < 16; i++) this.values[i] = values[i];

@@ -1,3 +1,6 @@
+#ifndef VECTOR4_H
+#define VECTOR4_H
+
 class Vector4
 {
 private:
@@ -20,3 +23,6 @@ public:
 	Vector4& operator* (float other);
 	Vector4& operator* (int other);
 };
+
+#endif // VECTOR4_H
+

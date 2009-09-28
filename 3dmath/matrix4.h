@@ -1,3 +1,8 @@
+#ifndef MATRIX4_H
+#define MATRIX4_H
+
+#include "vector4.h"
+
 class Matrix4
 {
 private:
@@ -14,3 +19,4 @@ public:
 	Vector4& operator* (Vector4& other);
 }
 
+#endif // MATRIX4_H
