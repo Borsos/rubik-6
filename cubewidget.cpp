@@ -33,57 +33,69 @@ void CubeWidget::setColor(CubeModel::Color color)
 	}
 }
 
-void CubeWidget::renderPiece(CubeModel::Piece& piece)
+void CubeWidget::renderPiece(int x, int y, int z)
 {
 	/*for (int i = 0; i < 6; i++)
 	{
 		std::cout << piece.face[i] << " ";
 	}
 	std::cout << std::endl;//*/
+	CubeModel::Piece pieceModel = model.getPiece(x, y, z);
+	PieceView pieceView = pieceViews[x][y][z];
+
+	Vector4 min = pieceView.getMin(false);
+	Vector4 max = pieceView.getMax(false);
+	Vector4 (*normals)[3] = pieceView.getNormals(false);
 
 	glBegin(GL_QUADS);
 
 	// front 
-	setColor(piece.face[0]);
-	glVertex3f(-1.0f, -1.0f, 1.0f);
-	glVertex3f(1.0f, -1.0f, 1.0f);
-	glVertex3f(1.0f, 1.0f, 1.0f);
-	glVertex3f(-1.0f, 1.0f, 1.0f);
+	setColor(pieceModel.face[0]);
+	glNormal3fv((*normals[0]).getValues());
+	glVertex3f(min[0], min[1], max[2]);
+	glVertex3f(max[0], min[1], max[2]);
+	glVertex3f(max[0], max[1], max[2]);
+	glVertex3f(min[0], max[1], max[2]);
 
 	// back
-	setColor(piece.face[1]);
-	glVertex3f(-1.0f, -1.0f, -1.0f);
-	glVertex3f(1.0f, -1.0f, -1.0f);
-	glVertex3f(1.0f, 1.0f, -1.0f);
-	glVertex3f(-1.0f, 1.0f, -1.0f);
+	setColor(pieceModel.face[1]);
+	glNormal3fv((-(*normals[0])).getValues());
+	glVertex3f(min[0], min[1], min[2]);
+	glVertex3f(max[0], min[1], min[2]);
+	glVertex3f(max[0], max[1], min[2]);
+	glVertex3f(min[0], max[1], min[2]);
 
 	// up
-	setColor(piece.face[2]);
-	glVertex3f(-1.0f, 1.0f, -1.0f);
-	glVertex3f(1.0f, 1.0f, -1.0f);
-	glVertex3f(1.0f, 1.0f, 1.0f);
-	glVertex3f(-1.0f, 1.0f, 1.0f);
+	setColor(pieceModel.face[2]);
+	glNormal3fv((*normals[1]).getValues());
+	glVertex3f(min[0], max[1], min[2]);
+	glVertex3f(max[0], max[1], min[2]);
+	glVertex3f(max[0], max[1], max[2]);
+	glVertex3f(min[0], max[1], max[2]);
 
 	// down
-	setColor(piece.face[3]);
-	glVertex3f(-1.0f, -1.0f, -1.0f);
-	glVertex3f(1.0f, -1.0f, -1.0f);
-	glVertex3f(1.0f, -1.0f, 1.0f);
-	glVertex3f(-1.0f, -1.0f, 1.0f);
+	setColor(pieceModel.face[3]);
+	glNormal3fv((-(*normals[1])).getValues());
+	glVertex3f(min[0], min[1], min[2]);
+	glVertex3f(max[0], min[1], min[2]);
+	glVertex3f(max[0], min[1], max[2]);
+	glVertex3f(min[0], min[1], max[2]);
 
 	// left
-	setColor(piece.face[4]);
-	glVertex3f(-1.0f, -1.0f, -1.0f);
-	glVertex3f(-1.0f, -1.0f, 1.0f);
-	glVertex3f(-1.0f, 1.0f, 1.0f);
-	glVertex3f(-1.0f, 1.0f, -1.0f);
+	setColor(pieceModel.face[4]);
+	glNormal3fv((-(*normals[2])).getValues());
+	glVertex3f(min[0], min[1], min[2]);
+	glVertex3f(min[0], min[1], max[2]);
+	glVertex3f(min[0], max[1], max[2]);
+	glVertex3f(min[0], max[1], min[2]);
 
 	// right
-	setColor(piece.face[5]);
-	glVertex3f(1.0f, -1.0f, -1.0f);
-	glVertex3f(1.0f, -1.0f, 1.0f);
-	glVertex3f(1.0f, 1.0f, 1.0f);
-	glVertex3f(1.0f, 1.0f, -1.0f);
+	setColor(pieceModel.face[5]);
+	glNormal3fv((*normals[2]).getValues());
+	glVertex3f(max[0], min[1], min[2]);
+	glVertex3f(max[0], min[1], max[2]);
+	glVertex3f(max[0], max[1], max[2]);
+	glVertex3f(max[0], max[1], min[2]);
 
 	glEnd();
 }
@@ -187,7 +199,7 @@ void CubeWidget::renderCube()
 
 				glTranslatef(x * CUBE_SPACING, y * CUBE_SPACING, z * CUBE_SPACING);
 				
-				renderPiece(model.getPiece(x, y, z));
+				renderPiece(x, y, z);
 
 				glPopMatrix();
 			}

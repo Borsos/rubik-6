@@ -10,6 +10,6 @@ INCLUDEPATH += .
 QT += opengl
 
 # Input
-HEADERS += cubemodel.h cubewidget.h mainwindow.h
-SOURCES += cubemodel.cpp cubewidget.cpp mainwindow.cpp main.cpp
+HEADERS += "3dmath/vector4.h" "3dmath/matrix4.h" pieceview.h cubemodel.h cubewidget.h mainwindow.h
+SOURCES += "3dmath/vector4.cpp" "3dmath/matrix4.cpp" pieceview.cpp cubemodel.cpp cubewidget.cpp mainwindow.cpp main.cpp
 FORMS += mainwindow.ui

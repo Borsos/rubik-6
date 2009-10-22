@@ -3,6 +3,8 @@
 
 #include <QtOpenGL>
 #include "cubemodel.h"
+#include "pieceview.h"
+#include "3dmath/ray.h"
 
 class CubeWidget : public QGLWidget
 {
@@ -18,14 +20,20 @@ class CubeWidget : public QGLWidget
 		int animationTimer;
 
 		bool isRotating;
+		bool isAnimating;
 		CubeModel::Move rotation;
 		float rotationAngle;
 		
+		int flashCounters[27];
+
+		PieceView pieceViews[3][3][3];
+
+		//Ray pickingRay;
 		GLdouble x_near, y_near, z_near;
 		GLdouble x_far, y_far, z_far;
 
 		void setColor(CubeModel::Color color);
-		void renderPiece(CubeModel::Piece& piece);
+		void renderPiece(int x, int y, int z);
 		void renderCube();
 
 	public:
